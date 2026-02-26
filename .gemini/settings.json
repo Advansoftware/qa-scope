@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "stitch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/stitch-mcp@latest"
+      ],
+      "env": {
+        "GOOGLE_API_KEY": "AIzaSyB_aXpPIQd6FJ0UVik18wuZ-k_N3mlBKBE"
+      }
+    },
+    "mui": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@mui/mcp@latest"
+      ]
+    }
+  }
+}
