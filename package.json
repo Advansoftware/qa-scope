@@ -27,10 +27,7 @@
       "output": "dist-electron"
     },
     "files": [
-      "electron/**/*",
-      ".next/standalone/**/*",
-      ".next/static/**/*",
-      "public/**/*"
+      "electron/**/*"
     ],
     "extraResources": [
       {
@@ -38,12 +35,19 @@
         "to": "icon.png"
       },
       {
+        "from": ".next/standalone",
+        "to": "standalone",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
         "from": ".next/static",
-        "to": ".next/standalone/.next/static"
+        "to": "standalone/.next/static"
       },
       {
         "from": "public",
-        "to": ".next/standalone/public"
+        "to": "standalone/public"
       }
     ],
     "linux": {
@@ -77,9 +81,7 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "installerIcon": "electron/resources/icon.png",
-      "uninstallerIcon": "electron/resources/icon.png"
+      "allowToChangeInstallationDirectory": true
     }
   },
   "dependencies": {
