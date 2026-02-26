@@ -22,6 +22,7 @@
 
 # electron
 /dist-electron/
+/electron/app/
 
 # database
 *.db

@@ -6,7 +6,8 @@ let db = null;
 function getDb() {
   if (db) return db;
 
-  const dbPath = path.join(process.cwd(), 'qa-scope.db');
+  const defaultPath = path.join(process.cwd(), 'qa-scope.db');
+  const dbPath = process.env.QA_SCOPE_DB_PATH || defaultPath;
   db = new Database(dbPath);
 
   db.pragma('journal_mode = WAL');

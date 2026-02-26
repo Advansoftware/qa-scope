@@ -29,25 +29,11 @@
     "files": [
       "electron/**/*"
     ],
+    "afterPack": "scripts/afterPack.js",
     "extraResources": [
       {
         "from": "electron/resources/icon.png",
         "to": "icon.png"
-      },
-      {
-        "from": ".next/standalone",
-        "to": "standalone",
-        "filter": [
-          "**/*"
-        ]
-      },
-      {
-        "from": ".next/static",
-        "to": "standalone/.next/static"
-      },
-      {
-        "from": "public",
-        "to": "standalone/public"
       }
     ],
     "linux": {

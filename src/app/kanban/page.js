@@ -187,7 +187,7 @@ function TaskFormDialog({ open, onClose, onSubmit, scopes }) {
             ))}
           </TextField>
           <TextField fullWidth label="Título" value={title} onChange={(e) => setTitle(e.target.value)} required sx={{ mb: 2 }} />
-          <TextField fullWidth label="Descrição" value={description} onChange={(e) => setDescription(e.target.value)} multiline rows={2} sx={{ mb: 2 }} />
+          <TextField fullWidth label="Descrição" placeholder="Passo a passo, instruções detalhadas, comandos..." value={description} onChange={(e) => setDescription(e.target.value)} multiline rows={6} sx={{ mb: 2 }} />
           <TextField select fullWidth label="Prioridade" value={priority} onChange={(e) => setPriority(e.target.value)}>
             <MenuItem value="low">Baixa</MenuItem>
             <MenuItem value="medium">Média</MenuItem>

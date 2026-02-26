@@ -183,6 +183,7 @@ async function startServer() {
 
   // Use system node (better-sqlite3 compiled for it) or Electron as fallback
   const systemNode = findNodeBinary();
+  const dbPath = path.join(app.getPath('userData'), 'qa-scope.db');
   let cmd, args, env;
 
   if (systemNode) {
@@ -193,6 +194,7 @@ async function startServer() {
       PORT: String(serverPort),
       HOSTNAME: '127.0.0.1',
       NODE_ENV: 'production',
+      QA_SCOPE_DB_PATH: dbPath,
     };
   } else {
     cmd = process.execPath;
@@ -203,6 +205,7 @@ async function startServer() {
       PORT: String(serverPort),
       HOSTNAME: '127.0.0.1',
       NODE_ENV: 'production',
+      QA_SCOPE_DB_PATH: dbPath,
     };
   }
 

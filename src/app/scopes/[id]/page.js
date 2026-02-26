@@ -25,6 +25,7 @@ import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import Collapse from '@mui/material/Collapse';
 import { alpha } from '@mui/material/styles';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
@@ -34,6 +35,8 @@ import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import RadioButtonUncheckedRoundedIcon from '@mui/icons-material/RadioButtonUncheckedRounded';
 import ViewKanbanRoundedIcon from '@mui/icons-material/ViewKanbanRounded';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import useTasks from '@/hooks/useTasks';
 import useCommands from '@/hooks/useCommands';
 import { StatusChip, PriorityChip } from '@/components/common/StatusChip';
@@ -91,7 +94,7 @@ function TaskFormDialog({ open, onClose, onSubmit, scopeId, task = null }) {
         <DialogTitle>{isEdit ? 'Editar Tarefa' : 'Nova Tarefa'}</DialogTitle>
         <DialogContent sx={{ pt: '16px !important' }}>
           <TextField fullWidth label="Título" value={title} onChange={(e) => setTitle(e.target.value)} required autoFocus sx={{ mb: 2 }} />
-          <TextField fullWidth label="Descrição" value={description} onChange={(e) => setDescription(e.target.value)} multiline rows={3} sx={{ mb: 2 }} />
+          <TextField fullWidth label="Descrição" placeholder="Passo a passo, instruções detalhadas, comandos..." value={description} onChange={(e) => setDescription(e.target.value)} multiline rows={6} sx={{ mb: 2 }} />
           <TextField select fullWidth label="Prioridade" value={priority} onChange={(e) => setPriority(e.target.value)}>
             <MenuItem value="low">Baixa</MenuItem>
             <MenuItem value="medium">Média</MenuItem>
@@ -193,6 +196,7 @@ export default function ScopeDetailPage({ params }) {
   // Dialog states
   const [taskFormOpen, setTaskFormOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
+  const [expandedTasks, setExpandedTasks] = useState(new Set());
   const [cmdFormOpen, setCmdFormOpen] = useState(false);
   const [editingCmd, setEditingCmd] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
@@ -206,6 +210,15 @@ export default function ScopeDetailPage({ params }) {
   const handleToggleTask = async (task) => {
     const newStatus = task.status === 'done' ? 'todo' : 'done';
     await updateTaskStatus(task.id, newStatus);
+  };
+
+  const toggleTaskExpansion = (taskId) => {
+    setExpandedTasks((prev) => {
+      const next = new Set(prev);
+      if (next.has(taskId)) next.delete(taskId);
+      else next.add(taskId);
+      return next;
+    });
   };
 
   const handleEditTask = (task) => {
@@ -323,6 +336,13 @@ export default function ScopeDetailPage({ params }) {
                     {idx > 0 && <Divider />}
                     <ListItem disablePadding secondaryAction={
                       <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+                        {task.description && (
+                          <Tooltip title={expandedTasks.has(task.id) ? "Recolher instruções" : "Ver instruções"}>
+                            <IconButton size="small" onClick={() => toggleTaskExpansion(task.id)} sx={{ mr: 1, color: expandedTasks.has(task.id) ? 'primary.main' : 'text.secondary' }}>
+                              {expandedTasks.has(task.id) ? <ExpandLessRoundedIcon fontSize="small" /> : <ExpandMoreRoundedIcon fontSize="small" />}
+                            </IconButton>
+                          </Tooltip>
+                        )}
                         <PriorityChip priority={task.priority} />
                         <Tooltip title="Editar">
                           <IconButton size="small" onClick={() => handleEditTask(task)}>
@@ -346,13 +366,35 @@ export default function ScopeDetailPage({ params }) {
                         </ListItemIcon>
                         <ListItemText
                           primary={task.title}
-                          secondary={task.description || null}
                           primaryTypographyProps={{
-                            sx: task.status === 'done' ? { textDecoration: 'line-through', color: 'text.disabled' } : {},
+                            sx: task.status === 'done' ? { textDecoration: 'line-through', color: 'text.disabled' } : { fontWeight: 500 },
                           }}
                         />
                       </ListItemButton>
                     </ListItem>
+                    {task.description && (
+                      <Collapse in={expandedTasks.has(task.id)} timeout="auto" unmountOnExit>
+                        <Box sx={{
+                          pl: '48px',
+                          pr: 2,
+                          pb: 2,
+                          pt: 1
+                        }}>
+                          <Box sx={{
+                            background: '#0D1117',
+                            border: '1px solid rgba(255,255,255,0.05)',
+                            borderRadius: 2,
+                            p: 2,
+                            typography: 'body2',
+                            color: 'text.secondary',
+                            whiteSpace: 'pre-wrap',
+                            fontFamily: 'system-ui, -apple-system, sans-serif'
+                          }}>
+                            {task.description}
+                          </Box>
+                        </Box>
+                      </Collapse>
+                    )}
                   </Box>
                 ))}
               </List>
